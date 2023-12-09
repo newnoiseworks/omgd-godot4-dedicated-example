@@ -22,13 +22,13 @@ func _ready():
 	if is_server():
 		print_debug("Server")
 
-		_gc = get_tree().connect("peer_connected", Callable(self, "_network_peer_connected"))
-		_gc = get_tree().connect("peer_disconnected", Callable(self, "_network_peer_disconnected"))
+		_gc = multiplayer.connect("peer_connected", Callable(self, "_network_peer_connected"))
+		_gc = multiplayer.connect("peer_disconnected", Callable(self, "_network_peer_disconnected"))
 	else:
 		print_debug("Client")
 
-		_gc = get_tree().connect("connection_failed", Callable(self, "_client_connect_failed"))
-		_gc = get_tree().connect("connected_to_server", Callable(self, "_client_connect_success"))
+		_gc = multiplayer.connect("connection_failed", Callable(self, "_client_connect_failed"))
+		_gc = multiplayer.connect("connected_to_server", Callable(self, "_client_connect_success"))
 
 	if USE_WEBSOCKETS:
 		_setup_network_peer_as_ws()
@@ -40,16 +40,16 @@ func _setup_network_peer_as_ws():
 	var peer
 
 	if is_server():
-		peer = WebSocketServer.new()
-		peer.listen(PORT, PackedStringArray(), true)
+		peer = WebSocketMultiplayerPeer.new()
+		peer.create_server(PORT)
 		print_debug("WS Server should be setup at port ", PORT)
 	else:
-		peer = WebSocketClient.new();
+		peer = WebSocketMultiplayerPeer.new()
 		var url = "ws://%s:%s" % [ServerConfig.dedicated_server_host, PORT]
 		print_debug("Attempting connection to ", url)
-		peer.connect_to_url(url, PackedStringArray(), true);
+		peer.create_client(url);
 
-	get_tree().network_peer = peer
+	multiplayer.multiplayer_peer = peer
 
 
 func _setup_network_peer_as_udp():
@@ -64,7 +64,7 @@ func _setup_network_peer_as_udp():
 		print_debug("Attempting connection to ", ServerConfig.dedicated_server_host, " at port ", PORT)
 		peer.create_client(ServerConfig.dedicated_server_host, PORT)
 
-	get_tree().network_peer = peer
+	multiplayer.multiplayer_peer = peer
 
 
 func _exit_tree():

@@ -15,7 +15,6 @@ const STARTING_HEALTH: int = 50
 var user_id: String
 
 var health: int = STARTING_HEALTH
-var velocity: Vector2
 
 
 func _ready():
@@ -31,15 +30,15 @@ func _physics_process(_delta):
 		velocity = velocity
 
 
-@rpc("any_peer") func _move_event(args):
+@rpc("any_peer", "call_remote", "unreliable") func _move_event(args):
 	target = args
 
 
-@rpc("any_peer") func _rotate_event(args):
+@rpc("any_peer", "call_remote", "unreliable") func _rotate_event(args):
 	icon.rotation += args
 
 
-@rpc("any_peer") func _fire_event():
+@rpc("any_peer", "call_remote", "reliable") func _fire_event():
 	var bullet: Area2D = bullet_scene.instantiate()
 	bullet.fire_dir = Vector2(0, 1).rotated(icon.rotation)
 	bullet.position = position
@@ -59,7 +58,7 @@ func take_damage():
 
 
 # TODO: This should disappear the player temporarily, turn off collisions as well, all on a timer
-@rpc("any_peer") func _player_killed():
+@rpc("any_peer", "call_remote", "reliable") func _player_killed():
 	visible = false
 	await get_tree().create_timer(3.0).timeout
 	health = STARTING_HEALTH

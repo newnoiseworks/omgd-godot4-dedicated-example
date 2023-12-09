@@ -33,8 +33,8 @@ func _add_player_to_scene(user_id: int):
 	if player == null:
 		player = player_scene.instantiate()
 
-	player.name = String(user_id)
-	player.user_id = String(user_id)
+	player.name = str(user_id)
+	player.user_id = str(user_id)
 	player.set_multiplayer_authority(ServerManager.get_network_id())
 
 	environment_items.call_deferred("add_child", player)
@@ -43,12 +43,8 @@ func _add_player_to_scene(user_id: int):
 @rpc func _setup_users_on_join(user_ids_from_server, user_pos_json, user_rots_json):
 	print_debug("_setup_users_on_join called")
 
-	var test_json_conv = JSON.new()
-	test_json_conv.parse(user_pos_json).result
-	var user_pos = test_json_conv.get_data()
-	var test_json_conv = JSON.new()
-	test_json_conv.parse(user_rots_json).result
-	var user_rots = test_json_conv.get_data()
+	var user_pos = JSON.parse_string(user_pos_json)
+	var user_rots = JSON.parse_string(user_rots_json)
 
 	for user_id in user_ids_from_server:
 		var v2 = str_to_var("Vector2" + user_pos["p%s" % user_id])
@@ -71,8 +67,8 @@ func _add_networked_player_to_scene(user_id: int):
 		user_id,
 		"_setup_users_on_join",
 		user_ids,
-		JSON.new().stringify(user_pos),
-		JSON.new().stringify(user_rots)
+		JSON.stringify(user_pos),
+		JSON.stringify(user_rots)
 	)
 
 	rpc("_add_character_to_scene", user_id)
@@ -89,8 +85,8 @@ func _add_networked_player_to_scene(user_id: int):
 	var player_node = character_scene.instantiate()
 
 	player_node.set_multiplayer_authority(user_id)
-	player_node.user_id = String(user_id)
-	player_node.name = String(user_id)
+	player_node.user_id = str(user_id)
+	player_node.name = str(user_id)
 	player_node.position = pos
 	player_node.find_child("Godot_icon").rotation_degrees = rot
 
@@ -111,6 +107,6 @@ func _remove_networked_player_from_scene(user_id: int):
 	print_debug("calling _rid_networked_player")
 
 	user_ids.erase(user_id)
-	environment_items.find_child(String(user_id), true, false).queue_free()
+	environment_items.find_child(str(user_id), true, false).queue_free()
 
 
