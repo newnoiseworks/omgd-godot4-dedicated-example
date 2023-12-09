@@ -3,7 +3,7 @@ extends Area2D
 const BULLET_SPEED = 200
 const BULLET_EXPIRY_DISTANCE = 1000
 
-export var is_firing: bool = true
+@export var is_firing: bool = true
 
 var fired_from: int
 var fire_dir: Vector2

@@ -14,11 +14,11 @@ script = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [node name="Label" type="Label" parent="."]
-margin_left = -20.0
-margin_top = -2.88479
-margin_right = 20.0
-margin_bottom = 11.1152
-rect_scale = Vector2( 1.03635, 1 )
+offset_left = -20.0
+offset_top = -2.88479
+offset_right = 20.0
+offset_bottom = 11.1152
+scale = Vector2( 1.03635, 1 )
 text = "*"
 align = 1
 

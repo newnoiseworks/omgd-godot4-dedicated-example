@@ -13,7 +13,7 @@ func is_server():
 
 
 func get_network_id():
-	return get_tree().get_network_unique_id()
+	return get_tree().get_unique_id()
 
 
 func _ready():
@@ -22,13 +22,13 @@ func _ready():
 	if is_server():
 		print_debug("Server")
 
-		_gc = get_tree().connect("network_peer_connected", self, "_network_peer_connected")
-		_gc = get_tree().connect("network_peer_disconnected", self, "_network_peer_disconnected")
+		_gc = get_tree().connect("peer_connected", Callable(self, "_network_peer_connected"))
+		_gc = get_tree().connect("peer_disconnected", Callable(self, "_network_peer_disconnected"))
 	else:
 		print_debug("Client")
 
-		_gc = get_tree().connect("connection_failed", self, "_client_connect_failed")
-		_gc = get_tree().connect("connected_to_server", self, "_client_connect_success")
+		_gc = get_tree().connect("connection_failed", Callable(self, "_client_connect_failed"))
+		_gc = get_tree().connect("connected_to_server", Callable(self, "_client_connect_success"))
 
 	if USE_WEBSOCKETS:
 		_setup_network_peer_as_ws()
@@ -41,13 +41,13 @@ func _setup_network_peer_as_ws():
 
 	if is_server():
 		peer = WebSocketServer.new()
-		peer.listen(PORT, PoolStringArray(), true)
+		peer.listen(PORT, PackedStringArray(), true)
 		print_debug("WS Server should be setup at port ", PORT)
 	else:
 		peer = WebSocketClient.new();
 		var url = "ws://%s:%s" % [ServerConfig.dedicated_server_host, PORT]
 		print_debug("Attempting connection to ", url)
-		peer.connect_to_url(url, PoolStringArray(), true);
+		peer.connect_to_url(url, PackedStringArray(), true);
 
 	get_tree().network_peer = peer
 
@@ -56,11 +56,11 @@ func _setup_network_peer_as_udp():
 	var peer
 
 	if is_server():
-		peer = NetworkedMultiplayerENet.new()
+		peer = ENetMultiplayerPeer.new()
 		peer.create_server(PORT, 8)
 		print_debug("UDP Server should be setup at port ", PORT)
 	else:
-		peer = NetworkedMultiplayerENet.new()
+		peer = ENetMultiplayerPeer.new()
 		print_debug("Attempting connection to ", ServerConfig.dedicated_server_host, " at port ", PORT)
 		peer.create_client(ServerConfig.dedicated_server_host, PORT)
 
@@ -69,11 +69,11 @@ func _setup_network_peer_as_udp():
 
 func _exit_tree():
 	if is_server():
-		get_tree().disconnect("network_peer_connected", self, "_network_peer_connected")
-		get_tree().disconnect("network_peer_disconnected", self, "_network_peer_disconnected")
+		get_tree().disconnect("peer_connected", Callable(self, "_network_peer_connected"))
+		get_tree().disconnect("peer_disconnected", Callable(self, "_network_peer_disconnected"))
 	else:
-		get_tree().disconnect("connection_failed", self, "_client_connect_failed")
-		get_tree().disconnect("connected_to_server", self, "_client_connect_success")
+		get_tree().disconnect("connection_failed", Callable(self, "_client_connect_failed"))
+		get_tree().disconnect("connected_to_server", Callable(self, "_client_connect_success"))
 
 
 func _client_connect_success():
