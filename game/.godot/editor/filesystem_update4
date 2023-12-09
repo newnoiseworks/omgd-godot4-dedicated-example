@@ -1,5 +1,0 @@
-res://RootScenes/MultiplayerExample.tscn
-res://Character/PlayerController.gd
-res://Autoloads/ServerManager.gd
-res://Character/CharacterController.gd
-res://RootScenes/MultiplayerExampleController.gd
