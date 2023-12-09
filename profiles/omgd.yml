@@ -7,7 +7,7 @@ omgd:
       - build-service: build-x11-server
         copy: "game/dist/x11-server"
         to: "servers/dedicated-build/src"
-  name: omgd-godot3-headless
+  name: omgd-godot4-headless
   servers:
     ports:
       tcp: '"22", "3030", "9999"'
