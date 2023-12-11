@@ -22,13 +22,13 @@ func _ready():
 	if is_server():
 		print_debug("Server")
 
-		_gc = multiplayer.connect("peer_connected", Callable(self, "_network_peer_connected"))
-		_gc = multiplayer.connect("peer_disconnected", Callable(self, "_network_peer_disconnected"))
+		_gc = multiplayer.connect("peer_connected", _network_peer_connected)
+		_gc = multiplayer.connect("peer_disconnected", _network_peer_disconnected)
 	else:
 		print_debug("Client")
 
-		_gc = multiplayer.connect("connection_failed", Callable(self, "_client_connect_failed"))
-		_gc = multiplayer.connect("connected_to_server", Callable(self, "_client_connect_success"))
+		_gc = multiplayer.connect("connection_failed", _client_connect_failed)
+		_gc = multiplayer.connect("connected_to_server", _client_connect_success)
 
 	if USE_WEBSOCKETS:
 		_setup_network_peer_as_ws()
@@ -69,11 +69,11 @@ func _setup_network_peer_as_udp():
 
 func _exit_tree():
 	if is_server():
-		get_tree().disconnect("peer_connected", Callable(self, "_network_peer_connected"))
-		get_tree().disconnect("peer_disconnected", Callable(self, "_network_peer_disconnected"))
+		get_tree().disconnect("peer_connected", _network_peer_connected)
+		get_tree().disconnect("peer_disconnected", _network_peer_disconnected)
 	else:
-		get_tree().disconnect("connection_failed", Callable(self, "_client_connect_failed"))
-		get_tree().disconnect("connected_to_server", Callable(self, "_client_connect_success"))
+		get_tree().disconnect("connection_failed", _client_connect_failed)
+		get_tree().disconnect("connected_to_server", _client_connect_success)
 
 
 func _client_connect_success():

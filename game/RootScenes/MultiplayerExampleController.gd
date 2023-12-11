@@ -13,18 +13,18 @@ func _ready():
 	var _gc # NOTE: avoiding code warnings with a dummy var
 
 	if ServerManager.is_server():
-		_gc = ServerManager.connect("player_joined", Callable(self, "_add_networked_player_to_scene"))
-		_gc = ServerManager.connect("player_left", Callable(self, "_remove_networked_player_from_scene"))
+		_gc = ServerManager.connect("player_joined", _add_networked_player_to_scene)
+		_gc = ServerManager.connect("player_left", _remove_networked_player_from_scene)
 	else:
-		_gc = ServerManager.connect("user_joined", Callable(self, "_add_player_to_scene"))
+		_gc = ServerManager.connect("user_joined", _add_player_to_scene)
 
 
 func _exit_tree():
 	if ServerManager.is_server():
-		ServerManager.disconnect("player_joined", Callable(self, "_add_networked_player_to_scene"))
-		ServerManager.disconnect("player_left", Callable(self, "_remove_networked_player_from_scene"))
+		ServerManager.disconnect("player_joined", _add_networked_player_to_scene)
+		ServerManager.disconnect("player_left", _remove_networked_player_from_scene)
 	else:
-		ServerManager.disconnect("user_joined", Callable(self, "_add_player_to_scene"))
+		ServerManager.disconnect("user_joined", _add_player_to_scene)
 
 
 func _add_player_to_scene(user_id: int):
