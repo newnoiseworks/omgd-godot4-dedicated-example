@@ -13,7 +13,7 @@ func is_server():
 
 
 func get_network_id():
-	return get_tree().get_unique_id()
+	return multiplayer.get_unique_id()
 
 
 func _ready():
@@ -49,7 +49,7 @@ func _setup_network_peer_as_ws():
 		print_debug("Attempting connection to ", url)
 		peer.create_client(url);
 
-	multiplayer.multiplayer_peer = peer
+	get_tree().get_multiplayer().multiplayer_peer = peer
 
 
 func _setup_network_peer_as_udp():
@@ -64,7 +64,7 @@ func _setup_network_peer_as_udp():
 		print_debug("Attempting connection to ", ServerConfig.dedicated_server_host, " at port ", PORT)
 		peer.create_client(ServerConfig.dedicated_server_host, PORT)
 
-	multiplayer.multiplayer_peer = peer
+	get_tree().get_multiplayer().multiplayer_peer = peer
 
 
 func _exit_tree():

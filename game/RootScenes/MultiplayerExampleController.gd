@@ -37,10 +37,11 @@ func _add_player_to_scene(user_id: int):
 	player.user_id = str(user_id)
 	player.set_multiplayer_authority(ServerManager.get_network_id())
 
-	environment_items.call_deferred("add_child", player)
+	environment_items.add_child(player)
 
 
-@rpc func _setup_users_on_join(user_ids_from_server, user_pos_json, user_rots_json):
+@rpc
+func _setup_users_on_join(user_ids_from_server, user_pos_json, user_rots_json):
 	print_debug("_setup_users_on_join called")
 
 	var user_pos = JSON.parse_string(user_pos_json)
@@ -75,7 +76,8 @@ func _add_networked_player_to_scene(user_id: int):
 	_add_character_to_scene(user_id)
 
 
-@rpc("any_peer") func _add_character_to_scene(user_id: int, pos: Vector2 = Vector2.ZERO, rot: float = 0):
+@rpc("any_peer")
+func _add_character_to_scene(user_id: int, pos: Vector2 = Vector2.ZERO, rot: float = 0):
 	if (user_id == ServerManager.get_network_id()): return
 
 	print_debug("calling _add_character_to_scene for user_id ", user_id)
@@ -103,7 +105,8 @@ func _remove_networked_player_from_scene(user_id: int):
 	_rid_networked_player(user_id)
 
 
-@rpc("any_peer") func _rid_networked_player(user_id: int):
+@rpc("any_peer")
+func _rid_networked_player(user_id: int):
 	print_debug("calling _rid_networked_player")
 
 	user_ids.erase(user_id)
