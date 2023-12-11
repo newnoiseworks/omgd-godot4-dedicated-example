@@ -1,7 +1,11 @@
 extends Node
 
 const PORT = 9999
-const USE_WEBSOCKETS = true
+
+# NOTE: Godot 4 requires a secure (SSL) context to fully work when deployed. If you use
+# websockets, this example will work on localhost / your local machine, but will NOT
+# work on a deployed server.
+const USE_WEBSOCKETS = false
 
 signal user_joined(id)
 signal player_joined(id)
