@@ -1,5 +1,5 @@
 omgd:
-  name: omgd-godot4-headless
+  name: godot4-dedicated-example
   game:
     targets:
       - build-service: build-web
