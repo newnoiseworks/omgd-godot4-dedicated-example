@@ -13,5 +13,5 @@ omgd:
       tcp: '"22", "3030", "9999"'
       udp: '"9999"'
     services:
-    - web
-    - dedicated
+      - build-service: web
+      - build-service: dedicated
